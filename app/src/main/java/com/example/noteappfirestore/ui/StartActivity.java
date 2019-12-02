@@ -7,6 +7,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.noteappfirestore.R;
+import com.example.noteappfirestore.util.DataUtil;
 import com.firebase.ui.auth.AuthUI;
 
 import java.util.List;
@@ -86,6 +87,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
               {
 
                   Toast.makeText(this, "welcome new user", Toast.LENGTH_SHORT).show();
+                 // DataUtil.currentUser=user;
 
               }
               else{
