@@ -4,12 +4,13 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class NoteModel {
+public class NoteModel implements Serializable {
     private String id, image_url,title , des;
     @ServerTimestamp
     Date time , date;

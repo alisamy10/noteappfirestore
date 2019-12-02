@@ -15,10 +15,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.noteappfirestore.R;
+import com.example.noteappfirestore.database.MyDataBase;
 import com.example.noteappfirestore.database.NoteDao;
 import com.example.noteappfirestore.database.model.NoteModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -36,23 +39,73 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     private EditText descEdit, tittleEdit;
     private TextView date1Txt, time1Txt;
     private Button addNote;
+    private NoteModel note;
+
 
     private int mHour, mYear, mMonth, mMinute, mDay;
     private String sTime, sDate;
-
+String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         initView();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        sDate = sdf.format(new Date());
-        date1Txt.setText(sDate);
+        Intent intent2 = getIntent();
 
-        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss ");
-        sTime = sdf2.format(new Date());
-        time1Txt.setText(sTime);
+        Bundle bundle = intent2.getExtras();
+
+
+        if(bundle!=null){
+            if("update".equals(bundle.get("flag"))){
+                note = (NoteModel) getIntent().getSerializableExtra("note");
+
+                date1Txt.setText(note.formatDate());
+                time1Txt.setText(note.formatTime());
+                descEdit.setText(note.getDes());
+                id   =    note.getId();
+             //   note.getImage_url();
+               tittleEdit.setText(note.getTitle());
+
+               addNote.setText("UPDate");
+               addNote.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       NoteDao.updateNote(id, tittleEdit.getText().toString(), descEdit.getText().toString(), new OnCompleteListener<Void>() {
+                           @Override
+                           public void onComplete(@NonNull Task<Void> task) {
+                               if(task.isSuccessful())
+                               {
+                                   startActivity(new Intent(AddNoteActivity.this, HomeActivity.class));
+
+                               }
+                           }
+                       });
+                   }
+               });
+
+
+
+            }
+        }
+
+
+else {
+
+            descEdit.setText(null);
+            tittleEdit.setText(null);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            sDate = sdf.format(new Date());
+            date1Txt.setText(sDate);
+            SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss ");
+            sTime = sdf2.format(new Date());
+            time1Txt.setText(sTime);
+
+
+
+        }
+
+
 
     }
 
